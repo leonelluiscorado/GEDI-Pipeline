@@ -1,6 +1,5 @@
 from pipeline import *
 
-
 """
 Script that controls the entire GEDI Finder - Downloader - Subsetter pipeline.
 """
@@ -58,7 +57,15 @@ class GEDIPipeline:
 
             # Try Download
             if not self.downloader.download_granule(g[0]):
-                print(f"[Download FAIL] Fail download for link {g}")
+                retries = 3
+                print(f"[Downloader] Fail download for link {g}. Retrying...")
+                for r in retries:
+                    print(f"Retry {r}")
+                    if not self.downloader.download_granule(g[0]):
+                        retries -= 1
+                        continue
+                print(f"[Downloader] Fail download for link {g}. Skipping...")
+                continue
 
             # Subset
             self.subsetter.subset(os.path.join(self.out_directory, g[0].split("/")[-1]))
