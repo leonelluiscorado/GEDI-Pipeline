@@ -29,18 +29,40 @@ l2b_subset = ['/geolocation/lat_lowestmode', '/geolocation/lon_lowestmode', '/ch
              '/stale_return_flag', '/surface_flag', '/geolocation/degrade_flag',  '/geolocation/solar_elevation',
              '/geolocation/delta_time', '/geolocation/digital_elevation_model', '/geolocation/elev_lowestmode', '/pgap_theta']
 
+l4a_subset = [] # TODO: select relevant L4A product variables
+
 # Default BEAM Subset
 beam_subset = ['BEAM0000', 'BEAM0001', 'BEAM0010', 'BEAM0011', 'BEAM0101', 'BEAM0110', 'BEAM1000', 'BEAM1011']
  
 
 class GEDISubsetter:
+    """
+    The GEDISubsetter :class: clips the granule to the specified ROI and selects all the desired variables for each footprint
+    Args:
+        roi:
+        sds:
+        beams:
+        product:
+        out_dir:
+        out_format:
+
+    The subset function outputs the final clipped and subsetted granule to a GeoPKG file, by default.
+    The user can also select the following options: {GEOJSON, SHP}
+
+    Example:
+        subsetter = GEDISubsetter()
+        subsetter.subset()
+        >>> ...
+        >>>  [Subsetter] [filename].gpkg saved at: [out_dir]+filename ...
+    """
     
-    def __init__(self, roi, product, out_dir, sds=None, beams=None):
+    def __init__(self, roi, product, out_dir, out_format=None, sds=None, beams=None):
         self.roi = roi
         self.sds = sds
         self.beams = beams
         self.product = product
         self.out_dir = out_dir
+        self.out_format = "GPKG" if out_format is None else out_format # Defaults to GeoPKG
 
         self._preprocess()
 
@@ -66,9 +88,11 @@ class GEDISubsetter:
         if 'GEDI01_B' in self.product:
             self.sds_subset = l1b_subset
         elif 'GEDI02_A' in self.product:
-            self.sds_subset = l2a_subset#['/'+s for s in all_l2a_subset]
-        else:
+            self.sds_subset = l2a_subset
+        elif 'GEDI02_B' in self.product:
             self.sds_subset = l2b_subset
+        else:
+            self.sds_subset = l4a_subset
 
         # Append defined additional sds to main sds_subset
         if self.sds is not None:
@@ -77,6 +101,11 @@ class GEDISubsetter:
 
 
     def _select_beams_within_roi(self, gedi_file, gedi_df, beams, gedi_sds):
+        """
+        This function selects all the footprints inside the ROI with the select beams
+        Reference: 
+        """
+
         # Loop through each beam and create a geodataframe with lat/lon for each shot, then clip to ROI
         for b in beams:
             beams_sds = [s for s in gedi_sds if b in s]
@@ -112,6 +141,11 @@ class GEDISubsetter:
 
 
     def _select_sds_variables(self, gedi_file, gedi_df, beams, gedi_sds):
+        """
+        For each clipped footprint (to ROI), subsets to desired variable set available in the product
+        Reference: 
+        """
+
         beams_df = pd.DataFrame()  # Create dataframe to store SDS
         j = 0
         
@@ -191,8 +225,6 @@ class GEDISubsetter:
 
                 else:
                     print(f"SDS: {s} not found")
-                    
-                ## print(f"Processing {j} of {len(beam_sds) * len(beams)}: {s}")
             
             beams_df = pd.concat([beams_df, beam_df])
 
@@ -202,12 +234,26 @@ class GEDISubsetter:
 
 
     def subset(self, granule):
+        """
+        Subsets an entire downloaded granule file and exports to GPKG (or other format) with the same filename
+
+        Args:
+            granule: filepath to granule file, already downloaded.
+
+        Returns:
+            Geopandas dataframe with all the intersecting footprints at ROI and select SDS variables
+            Also exports this dataframe to a GPKG file with the same name as the granule.
+            Returns None / Does not save if all the footprints in the granule do not intersect with ROI
+            or ScienceDataset is empty / does not align with product.
+        """
+
         # Open granule file
         print(f"[Subsetter] Processing file: {granule}")
         h5_granule = h5py.File(granule, 'r')      # Open file
         granule_name = granule.split('.h5')[0]  # Keep original filename
 
         # Check if already subsetted file exists
+        ## TODO: not sure if good idea to keep this or not.
         if os.path.exists(os.path.join(self.out_dir, granule.split("/")[-1].replace(".h5", ".gpkg"))):
             print(f"[Subsetter] File: {granule} already subsetted. Skipping...")
             return
@@ -237,12 +283,12 @@ class GEDISubsetter:
         if gedi_df.shape[0] == 0:
             print(f"[Subsetter] No intersecting shots were found between {granule_name} and the region of interest submitted.")
             return None
+
         else:
             print(f"[Subsetter] Intersecting shots found. Selecting variables from subset ...")
             beams_df = self._select_sds_variables(h5_granule, gedi_df, beams, gedi_sds)
 
             # Combine geolocation dataframe with SDS layer dataframe
-            #print([sn for sn in beams_df.columns])
             out_df = pd.merge(gedi_df, beams_df, left_on='shot_number', right_on=[sn for sn in beams_df.columns if sn.endswith('shot_number')][0])
             
             out_df.index = out_df['index']
@@ -252,11 +298,12 @@ class GEDISubsetter:
             # Subset the output DF to the actual boundary of the input ROI
             out_df = gp.overlay(out_df, self.final_clip)
 
+            # Drop all empty or not valid (NaN) geometry, as it corrupts the final output file
             out_df = out_df.dropna(subset=['geometry'])
             out_df = out_df[out_df['geometry'].is_valid]
             out_df = out_df[~out_df['geometry'].is_empty]
-
-            print(out_df.info())
+        
+        ## TODO: Implement the saving to file module as optional
         try:    
             # Export final geodataframe as Geojson
             print(f"[Subsetter] {granule_name}.gpkg")
@@ -265,3 +312,5 @@ class GEDISubsetter:
 
         except ValueError:
             print(f"[Subsetter] {granule_name} intersects the bounding box of the input ROI, but no shots intersect final clipped ROI.")
+
+        return out_df
