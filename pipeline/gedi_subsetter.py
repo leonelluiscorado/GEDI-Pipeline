@@ -39,21 +39,26 @@ class GEDISubsetter:
     """
     The GEDISubsetter :class: clips the granule to the specified ROI and selects all the desired variables for each footprint
     Args:
-        roi:
-        sds:
-        beams:
-        product:
-        out_dir:
-        out_format:
-
-    The subset function outputs the final clipped and subsetted granule to a GeoPKG file, by default.
-    The user can also select the following options: {GEOJSON, SHP}
+        roi: Region of Interest to search for granules. Coordinates must be in WG84 EPSG:4326 and organized as follows: [UL_Lat, UL_Lon, LR_Lat, LR_Lon]
+             Rectangle polygons ONLY. TODO: Take SHP files as argument and MultiPolygon
+        sds: Science Dataset variables used to extract from the granule. Check the product Data Dictionary for more info.
+             If the variable is inside a group except BEAMXXXX/, it must be specified ( e.g '/geolocation/lat_lowestmode' )
+             If None, extracts the default variables; else it appends to default variables.
+        beams: Keeps footprints of select BEAMS to extract from the granule. If none, selects all the available GEDI Beams.
+               Available BEAMS: ['BEAM0000', 'BEAM0001', 'BEAM0010', 'BEAM0011', 'BEAM0101', 'BEAM0110', 'BEAM1000', 'BEAM1011']
+        product: GEDI Product (without version). Products available are {'GEDI01_B'; 'GEDI02_A'; 'GEDI02_B'; 'GEDI04_A'}
+        out_dir: Filepath to save the subsetted granule in the 'out_format' file.
+        out_format: File format for the subsetted granule. 
+                    The subset function outputs the final clipped and subsetted granule to a GeoPKG file, by default.
+                    TODO: The user can also select the following options: {GEOJSON, SHP}
 
     Example:
-        subsetter = GEDISubsetter()
-        subsetter.subset()
+        subsetter = GEDISubsetter(roi=[.., .., .., ..], product='GEDI02_A', out_dir='some_path')
+        subset_df = subsetter.subset('[filename].h5')  # Outputs a GeoPandas dataframe
         >>> ...
         >>>  [Subsetter] [filename].gpkg saved at: [out_dir]+filename ...
+        subset_df.info()
+        >>> ...
     """
     
     def __init__(self, roi, product, out_dir, out_format=None, sds=None, beams=None):
@@ -72,7 +77,7 @@ class GEDISubsetter:
         try:
             self.ROI = Polygon([(self.roi[1], self.roi[0]), (self.roi[3], self.roi[0]), (self.roi[3], self.roi[2]), (self.roi[1], self.roi[2])]) 
         except:
-            print('error: unable to read input bounding box coordinates, the required format is: ul_lat,ul_lon,lr_lat,lr_lon')
+            print('[Subsetter] Error: unable to read input bounding box coordinates, the required format is: ul_lat,ul_lon,lr_lat,lr_lon')
             sys.exit(2)
 
         # Keep the exact input geometry for the final clip to ROI
@@ -103,7 +108,7 @@ class GEDISubsetter:
     def _select_beams_within_roi(self, gedi_file, gedi_df, beams, gedi_sds):
         """
         This function selects all the footprints inside the ROI with the select beams
-        Reference: 
+        Reference:  https://github.com/nasa/GEDI-Data-Resources/blob/main/python/scripts/GEDI_Subsetter/GEDI_Subsetter.py
         """
 
         # Loop through each beam and create a geodataframe with lat/lon for each shot, then clip to ROI
@@ -143,7 +148,7 @@ class GEDISubsetter:
     def _select_sds_variables(self, gedi_file, gedi_df, beams, gedi_sds):
         """
         For each clipped footprint (to ROI), subsets to desired variable set available in the product
-        Reference: 
+        Reference:  https://github.com/nasa/GEDI-Data-Resources/blob/main/python/scripts/GEDI_Subsetter/GEDI_Subsetter.py
         """
 
         beams_df = pd.DataFrame()  # Create dataframe to store SDS
@@ -224,7 +229,7 @@ class GEDISubsetter:
                     del all_data
 
                 else:
-                    print(f"SDS: {s} not found")
+                    print(f"[Subsetter] SDS: {s} not found")
             
             beams_df = pd.concat([beams_df, beam_df])
 
