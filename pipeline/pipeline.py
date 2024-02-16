@@ -1,22 +1,28 @@
-from pipeline import *
+from .finder import *
+from .subsetter import *
+from .downloader import *
 
 """
 Script that controls the entire GEDI Finder - Downloader - Subsetter pipeline.
 """
 
 class GEDIPipeline:
+    """
+    The GEDIPipeline :class: performs all operations in selecting, downloading and subsetting GEDI Data for a given region of interest
+    Args:
+        out
+    """
 
-    def __init__(self, username, password, out_directory, product, version, date_start, date_end, roi, sds, beams):
+    def __init__(self, out_directory, product, version, date_start, date_end, roi, sds, beams, persist_login=False):
 
         self.product = product
         self.version = version
         self.date_start, self.date_end = date_start, date_end
         self.roi = [float(c) for c in roi.split(",")]
-        self.username = username
-        self.password = password
         self.out_directory = out_directory
         self.sds = sds
         self.beams = beams
+        self.persist_login = persist_login
 
         self.finder = GEDIFinder(
             product=self.product,
@@ -27,8 +33,7 @@ class GEDIPipeline:
         )
         
         self.downloader = GEDIDownloader(
-            username=self.username,
-            password=self.password,
+            persist_login=self.persist_login,
             save_path=self.out_directory
         )
 
@@ -43,6 +48,7 @@ class GEDIPipeline:
         # Make dir if not exists
         if not os.path.exists(out_directory):
             os.mkdir(out_directory)
+
 
     def run_pipeline(self):
 

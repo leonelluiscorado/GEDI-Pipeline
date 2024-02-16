@@ -136,7 +136,7 @@ class GEDIDownloader:
 			self.__download(http_response.iter_content(chunk_size=chunk_size), file_path, response_length)
 
 		# Check file integrity / if it downloaded correctly
-		if not os.getsize(file_path) == int(response_length):
+		if not os.path.getsize(file_path) == int(response_length):
 			# If not downloaded correctly, send message for download retry
 			return False
 

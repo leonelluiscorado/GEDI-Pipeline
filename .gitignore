@@ -4,3 +4,6 @@
 *.json
 *GranuleList*
 *.Rhistory*
+*.gpkg*
+*.shp*
+*__pycache__*
