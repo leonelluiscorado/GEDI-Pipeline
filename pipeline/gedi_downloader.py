@@ -1,9 +1,13 @@
 import os
 import requests
+from dotenv import load_dotenv
+import getpass
 from tqdm import tqdm
+import earthaccess
 
 class SessionNASA(requests.Session):
 	"""
+		DEPRECATED: We use EarthAccess API
 	:class: SessionNASA authorizes access to download files from NASA's Data Repository.
 	This implementation checks if a .env file exists with said credentials, if not, asks user for input.
 
@@ -14,11 +18,24 @@ class SessionNASA(requests.Session):
 	
 	AUTH_HOST = 'urs.earthdata.nasa.gov'
 
-	def __init__(self, username, password):
-		super().__init__() 
-		self.auth = (username, password)
+	def __init__(self):
+		super().__init__()
 
-		## TODO : Ask user for input if ".env" file not exists
+		self.__precheck()
+		self.auth = (self.username, self.password)
+
+	def __precheck(self):
+		if os.path.exists(".env"):
+			load_dotenv()
+			self.username = os.environ.get("GEDIPIPELINE_USER")
+			self.password = os.environ.get("GEDIPIPELINE_PASS")
+			return
+		
+		# If credentials don't exist yet, ask user
+		print("[Downloader] Introduce your credentials to access the Data Repository")
+		self.username = input("Username : ")
+		self.password = getpass.getpass()
+
  
 	def rebuild_auth(self, prepared_request, response):
 		"""
@@ -46,14 +63,15 @@ class GEDIDownloader:
 	It implements a file chunk downloading mechanism and a file checking step to skip a download or not.
 
 	Args:
-		username: 
-		password: SessionNASA takes care of these arguments
+		persist_login: Choice to persist login and save to a .netrc file. See Earthdata Access API for more info:
+					   https://earthaccess.readthedocs.io/en/latest/howto/authenticate/
 		save_path: Absolute path to save the downloaded files. If None, saves to current working directory (script).
 	"""
 
-	def __init__(self, username, password, save_path=None):
+	def __init__(self, persist_login=False, save_path=None):
 		self.save_path = save_path if save_path is not None else ""
-		self.session = SessionNASA(username, password)
+		self.auth = earthaccess.login(persist=persist_login)
+		self.session = self.auth.get_session()
 	
 	def __download(self, content, save_path, length):
 
@@ -108,7 +126,7 @@ class GEDIDownloader:
 
 		# If http response other than OK 200, user needs to check credentials
 		if not http_response.ok:
-			print(f"[Downloader] Invalid credentials for Login session. Please retry again.")
+			print(f"[Downloader] Invalid credentials for Login session. You may want to delete the credentials on the '.netrc' file and start over.")
 			return False
 
 		response_length = http_response.headers.get('content-length')
