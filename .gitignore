@@ -7,3 +7,4 @@
 *.gpkg*
 *.shp*
 *__pycache__*
+*test*
