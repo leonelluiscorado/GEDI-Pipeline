@@ -31,8 +31,7 @@ researchers, which enables a much more efficient analysis of GEDI data.
 
 ## Installation
 
-### Requirements (WIP)
-(WIP notes: These are the most basic installation instructions that work, more detail soon)
+### Requirements
 -  The user must have a registered [EarthData](https://www.earthdata.nasa.gov/eosdis/science-system-description/eosdis-components/earthdata-login) account before accessing any of these datasets.
 -  Python (>=3.12)
 
@@ -42,17 +41,17 @@ You can set up the virtual environment to run this project in two ways:
 
 ### Virtual Environment
 
-1. Create a new [virtual environment](https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/) with a name and path of your choice by running `python3 -m venv <PATH-TO-ENV>/<NAME>`
-2. Activate the newly created environment by `source <PATH-TO-ENV>/bin/activate` (Check that python points to the new environment with `which python3` or `which pip` after activating, it should print something like: `..<PATH-TO-ENV>/<NAME>/bin/python`)
+1. Create a new [virtual environment](https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/) with name `gedi-pipeline` by running `python3 -m venv ~/venvs/gedi-pipeline`
+2. Activate the newly created environment by `source ~/venvs/gedi-pipeline/bin/activate` (Check that python points to the new environment with `which python3` or `which pip` after activating, it should print something like: `../venvs/gedi-pipeline/bin/python`)
 3. Install all the required packages for the pipeline to work with `python3 -m pip install -r requirements.txt`
 
 ### Usage with Anaconda / Mamba
 
 You may create a Conda/Mamba environment specifically for this project, requiring a few extra steps than creating a venv.
 1. Install [Anaconda](https://docs.anaconda.com/free/anaconda/install/) or [Mambaforge](https://github.com/conda-forge/miniforge#mambaforge) (If installing on Windows, check the `Add to PATH environment variable` to work on a command-line interface).
-2. Create a new conda environment with pip installed by `conda create --name <NAME> python=3.12 pip` (or switch `conda` with `mamba` if Mambaforge is installed).
-3. Activate the newly created environment with `conda activate <NAME>` or `mamba activate <NAME>` and check if python points to the activated environment path with `which python3`
-4. Update the existing environment with `environment.yml` provided in the repository with `conda env update --file environment.yml`. Be patient, it should take a while.
+2. Create a new conda environment called `gedi-pipeline` with pip installed by running `conda create --name gedi-pipeline python=3.12 pip` (or switch `conda` with `mamba` if Mambaforge is installed).
+3. Activate the newly created environment with `conda activate gedi-pipeline` or `mamba activate gedi-pipeline` and check if python points to the activated environment path with `which python3`
+4. Update the existing environment with `environment.yml` provided in the repository with `conda env update -f environment.yml`. Be patient, it should take a while.
 
 ## Executing the Pipeline script
 
