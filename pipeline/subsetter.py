@@ -8,7 +8,6 @@ import argparse
 import sys
 import numpy as np
 import warnings
-import geofileops as gfo
 warnings.filterwarnings("ignore")
 
 # Default layers to be subset and exported, see README for information on how to add additional layers

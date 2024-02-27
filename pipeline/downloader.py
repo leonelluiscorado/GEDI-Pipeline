@@ -1,6 +1,5 @@
 import os
 import requests
-from dotenv import load_dotenv
 import getpass
 from tqdm import tqdm
 import earthaccess
