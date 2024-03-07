@@ -10,6 +10,8 @@ import numpy as np
 import warnings
 warnings.filterwarnings("ignore")
 
+from utils.utils import get_date_from_gedi_fn
+
 # Default layers to be subset and exported, see README for information on how to add additional layers
 l1b_subset = ['/geolocation/latitude_bin0', '/geolocation/longitude_bin0', '/channel', '/shot_number',
              '/rxwaveform','/rx_sample_count', '/stale_return_flag', '/tx_sample_count', '/txwaveform',
@@ -306,6 +308,9 @@ class GEDISubsetter:
             out_df = out_df.dropna(subset=['geometry'])
             out_df = out_df[out_df['geometry'].is_valid]
             out_df = out_df[~out_df['geometry'].is_empty]
+
+            # Write date column to subsetted file
+            out_df['date'] = get_date_from_gedi_fn(granule_name)
         
         ## TODO: Implement the saving to file module as optional
         try:    
