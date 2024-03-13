@@ -19,7 +19,7 @@ parser.add_argument('--start', required=True, help='Start date for time period o
 parser.add_argument('--end', required=True, help='Start date for time period of interest: valid format is yyyy.mm.dd (e.g. 2021.07.01).')
 
 parser.add_argument('--roi', required=True, help='Region of interest (ROI) to subset the GEDI orbit to in the output file. \
-                    Valid inputs are a geojson or .shp file or bounding box coordinates: ul_lat,ul_lon,lr_lat,lr_lon')
+                    Valid inputs are bounding box coordinates: ul_lat,ul_lon,lr_lat,lr_lon')
 
 parser.add_argument('--beams', required=False, help='Specific beams to be included in the output file (default is all beams) \
                     BEAM0000,BEAM0001,BEAM0010,BEAM0011 are Coverage Beams. BEAM0101,BEAM0110,BEAM1000,BEAM1011 are Full Power Beams.', default=None)

@@ -8,3 +8,4 @@
 *.shp*
 *__pycache__*
 *test*
+*dev*

@@ -69,6 +69,7 @@ class GEDIDownloader:
 
 	def __init__(self, persist_login=False, save_path=None):
 		self.save_path = save_path if save_path is not None else ""
+		print("Logging in EarthData...")
 		self.auth = earthaccess.login(persist=persist_login)
 		self.session = self.auth.get_session()
 	
