@@ -78,13 +78,11 @@ This project is in its early stages so any contributions are welcome with a well
 
 We would like to thank the University of Maryland and NASA's Goddard Space Flight Center for their relentless work on the GEDI mission.
 
-The GEDI Pipeline is (very) inspired by other two repositories, which we would like to thank for their contributions for the GEDI Project:
+The GEDI Pipeline is (very) inspired by other repositories, which we would like to thank for their contributions for the GEDI Project:
 - NASA's GEDI Data Resources: https://github.com/nasa/GEDI-Data-Resources
 - pyGEDI: https://github.com/EduinHSERNA/pyGEDI
 - Also from this specific answer to a forum post: https://forum.earthdata.nasa.gov/viewtopic.php?t=591
-
-We would also like to thank the contributors of rGEDI for inspiration in building a Python version of the GEDI toolbox, with more features to come!
-https://github.com/carlos-alberto-silva/rGEDI
+- rGEDI: https://github.com/carlos-alberto-silva/rGEDI
 
 ### Funding
 
