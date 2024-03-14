@@ -86,6 +86,10 @@ The GEDI Pipeline is (very) inspired by other two repositories, which we would l
 We would also like to thank the contributors of rGEDI for inspiration in building a Python version of the GEDI toolbox, with more features to come!
 https://github.com/carlos-alberto-silva/rGEDI
 
+### Funding
+
+This work was conducted within the framework of the 3D-SMOS project (Combining LiDAR, radar, and multispectral data to characterize the three-dimensional structure of vegetation and produce land cover maps), financially supported by the Directorate-General for Territory (DGT) with funds from the Recovery and Resilience Plan (Investimento RE-C08-i02: Cadastro da Propriedade Rústica e Sistema de Monitorização da Ocupação do Solo).
+
 ## References
 
 Dubayah, R., Blair, J.B., Goetz, S., Fatoyinbo, L., Hansen, M., Healey, S., Hofton, M., Hurtt, G., Kellner, J., Luthcke, S., & Armston, J. (2020) The Global Ecosystem Dynamics Investigation: High-resolution laser ranging of the Earth’s forests and topography. Science of Remote Sensing, p.100002. https://doi.org/10.1016/j.srs.2020.100002
