@@ -1,4 +1,5 @@
 from pipeline.pipeline import GEDIPipeline
+from utils.service_status import get_service_status
 
 import argparse
 
@@ -33,6 +34,8 @@ parser.add_argument('--login_keep', required=False, help='Include this option to
 args = parser.parse_args()
 
 # ------------------------------------------------------------------------------------#
+
+nots = get_service_status(args.product)
 
 pipeline = GEDIPipeline(
     out_directory = args.dir,
