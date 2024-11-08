@@ -13,14 +13,14 @@ warnings.filterwarnings("ignore")
 from utils.utils import get_date_from_gedi_fn
 
 # Default layers to be subset and exported, see README for information on how to add additional layers
-l1b_subset = ['/geolocation/latitude_bin0', '/geolocation/longitude_bin0', '/channel', '/shot_number',
+l1b_subset = ['/geolocation/latitude_bin0', '/geolocation/longitude_bin0', '/channel', '/shot_number', '/rx_sample_start_index',
              '/rxwaveform','/rx_sample_count', '/stale_return_flag', '/tx_sample_count', '/txwaveform',
              '/geolocation/degrade', '/geolocation/delta_time', '/geolocation/digital_elevation_model',
               '/geolocation/solar_elevation',  '/geolocation/local_beam_elevation',  '/noise_mean_corrected',
-             '/geolocation/elevation_bin0', '/geolocation/elevation_lastbin', '/geolocation/surface_type', '/geolocation/digital_elevation_model_srtm']
+             '/geolocation/elevation_bin0', '/geolocation/elevation_lastbin', '/geolocation/surface_type', '/geolocation/digital_elevation_model_srtm' '/geolocation/degrade']
 
 l2a_subset = ['/lat_lowestmode', '/lon_lowestmode', '/channel', '/shot_number', '/degrade_flag', '/delta_time', 
-             '/digital_elevation_model', '/elev_lowestmode', '/quality_flag', '/rh', '/sensitivity', '/digital_elevation_model_srtm', 
+             '/digital_elevation_model', '/elev_lowestmode', '/quality_flag', '/rh', '/sensitivity', '/rx_cumulative', '/digital_elevation_model_srtm', 
              '/elevation_bias_flag', '/surface_flag',  '/num_detectedmodes',  '/selected_algorithm',  '/solar_elevation']
 
 
@@ -224,7 +224,7 @@ class GEDISubsetter:
                     surfaces = ['land', 'ocean', 'sea_ice', 'land_ice', 'inland_water']
                     all_data = gedi_file[s][()]
 
-                    for i in range(gedi[s].shape[0]):
+                    for i in range(gedi_file[s].shape[0]):
                         beam_df[f'{surfaces[i]}'] = all_data[i][mindex:maxdex]
 
                     del all_data

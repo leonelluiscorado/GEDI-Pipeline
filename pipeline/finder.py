@@ -4,9 +4,9 @@ from datetime import datetime
 
 # Set up dictionary where key is GEDI shortname + version
 concept_ids = {
-    'GEDI01_B.002': 'C1908344278-LPDAAC_ECS', 
-    'GEDI02_A.002': 'C1908348134-LPDAAC_ECS', 
-    'GEDI02_B.002': 'C1908350066-LPDAAC_ECS',
+    'GEDI01_B.002': 'C2142749196-LPCLOUD', 
+    'GEDI02_A.002': 'C2142771958-LPCLOUD', 
+    'GEDI02_B.002': 'C2142776747-LPCLOUD',
     'GEDI04_A.002': 'C2237824918-ORNL_CLOUD'
 }
 
@@ -65,7 +65,6 @@ class GEDIFinder:
         try:
             # Send GET request to CMR granule search endpoint w/ product concept ID, bbox & page number, format return as json
             cmr_response = r.get(f"{cmr}{concept_ids[product]}&bounding_box={bbox}&pageNum={page}").json()['feed']['entry']
-
             # If 2000 features are returned, move to the next page and submit another request, and append to the response
             while len(cmr_response) % 2000 == 0:
                 page += 1

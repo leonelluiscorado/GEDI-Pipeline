@@ -57,10 +57,6 @@ You may create a Conda/Mamba environment specifically for this project, requirin
 
 You can execute the pipeline script by running `python3 gedi_pipeline.py`. Additional commands must be provided for the pipeline to work, such as GEDI product, version, start date and end date query and the output directory. You can run `python3 gedi_pipeline.py --help` for more information.
 
-## Modules as separate classes (WIP)
-
-You can also import the classes used by the Pipeline, as well as the Pipeline itself. Check the `example_notebook.ipynb` for a quick tutorial.
-
 ## Available GEDI Products
 
 - GEDI L1B Geolocated Waveform Data Global Footprint Level - [GEDI01_B](https://lpdaac.usgs.gov/products/gedi01_bv001/)
