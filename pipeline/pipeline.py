@@ -18,7 +18,13 @@ class GEDIPipeline:
         self.product = product
         self.version = version
         self.date_start, self.date_end = date_start, date_end
-        self.roi = [float(c) for c in roi.split(",")]
+
+        if isinstance(roi, list):
+            self.roi = [float(c) for c in roi]
+
+        if isinstance(roi, str):
+            self.roi = [float(c) for c in roi.split(",")]
+            
         self.out_directory = out_directory
         self.sds = sds
         self.beams = beams

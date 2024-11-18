@@ -141,4 +141,25 @@ class GEDIDownloader:
 			return False
 
 		return True
-		
+
+	def download_files(self, files_url):
+		"""
+		This function downloads a list of files with given URLs. Must keep a Login Session alive.
+		Args:
+			files_url: A list containing GEDI files URLs from EarthData Repository
+		"""
+
+		# Start download for every granule
+		for g in files_url:
+            # Try Download
+			if not self.download_granule(g[0]):
+				retries = 3
+				print(f"[Downloader] Fail download for link {g}. Retrying...")
+				for r in retries:
+					print(f"Retry {r}")
+					if not self.download_granule(g[0]):
+						retries -= 1
+						continue
+					print(f"[Downloader] Fail download for link {g}. Skipping...")
+					continue
+		return files_url
