@@ -19,6 +19,9 @@ parser.add_argument('--start', required=True, help='Start date for time period o
 
 parser.add_argument('--end', required=True, help='Start date for time period of interest: valid format is yyyy.mm.dd (e.g. 2021.07.01).')
 
+parser.add_argument('--recurring_months', required=False, help='Include this option to GEDIPipeline only search the included months across all years provided.',
+                    action='store_true')
+
 parser.add_argument('--roi', required=True, help='Region of interest (ROI) to subset the GEDI orbit to in the output file. \
                     Valid inputs are bounding box coordinates: ul_lat,ul_lon,lr_lat,lr_lon')
 
@@ -43,6 +46,7 @@ pipeline = GEDIPipeline(
     version = args.version,
     date_start = args.start,
     date_end = args.end,
+    recurring_months=args.recurring_months,
     roi = args.roi,
     beams = args.beams,
     sds = args.sds,

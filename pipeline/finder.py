@@ -28,7 +28,7 @@ class GEDIFinder:
         >>> ["URL1", "URL2", "URL3", ...]
     """
 
-    def __init__(self, product='GEDI02_A', version='002', date_start='', date_end='', roi=None):
+    def __init__(self, product='GEDI02_A', version='002', date_start='', date_end='', recurring_months=False, roi=None):
 
         self.product = product
         self.version = version
@@ -44,6 +44,11 @@ class GEDIFinder:
             # GEDI Finder expects bbox to be (LL_lon, LL_lat, UR_lon, UR_lat)
             [ul_lat, ul_lon, lr_lat, lr_lon] = roi
             self.roi = " ".join(map(str, [ul_lon, lr_lat, lr_lon, ul_lat]))
+
+        self.recurring_months = recurring_months
+
+        if self.recurring_months:
+            print("Recurring Months is TRUE. Searching between provided months across all provided years.")
 
 
     def __find_all_granules(self):
@@ -85,6 +90,9 @@ class GEDIFinder:
         """
         filter_g = []
 
+        # Dynamically create the set of allowed months from date_start to date_end
+        rec_months = set(range(self.date_start.month, self.date_end.month + 1))
+
         for g in granules:
             # Date of granule is in the filename described as a Julian Date YYYYDDD (e.g. 2020348)
             granule_name = g[0].split("/")[-1]
@@ -94,6 +102,10 @@ class GEDIFinder:
             # Stop search query if passes end_date
             if date_sec > self.date_end:
                 return filter_g
+
+            # Apply recurring months filter if enabled
+            if self.recurring_months and not date_sec.month in rec_months:
+                continue  # Skip this granule
 
             if date_sec >= self.date_start and date_sec <= self.date_end:
                 filter_g.append(g)

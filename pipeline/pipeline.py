@@ -13,11 +13,12 @@ class GEDIPipeline:
         out
     """
 
-    def __init__(self, out_directory, product, version, date_start, date_end, roi, sds, beams, persist_login=False):
+    def __init__(self, out_directory, product, version, date_start, date_end, recurring_months, roi, sds, beams, persist_login=False):
 
         self.product = product
         self.version = version
         self.date_start, self.date_end = date_start, date_end
+        self.recurring_months = recurring_months
 
         if isinstance(roi, list):
             self.roi = [float(c) for c in roi]
@@ -35,6 +36,7 @@ class GEDIPipeline:
             version=self.version,
             date_start=self.date_start,
             date_end=self.date_end,
+            recurring_months=self.recurring_months,
             roi=self.roi
         )
         

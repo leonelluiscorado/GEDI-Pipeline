@@ -30,7 +30,10 @@ l2b_subset = ['/geolocation/lat_lowestmode', '/geolocation/lon_lowestmode', '/ch
              '/stale_return_flag', '/surface_flag', '/geolocation/degrade_flag',  '/geolocation/solar_elevation',
              '/geolocation/delta_time', '/geolocation/digital_elevation_model', '/geolocation/elev_lowestmode', '/pgap_theta']
 
-l4a_subset = [] # TODO: select relevant L4A product variables
+l4a_subset = ['/lat_lowestmode', '/lon_lowestmode', '/channel', '/shot_number', '/degrade_flag', '/delta_time', 
+             '/digital_elevation_model', '/elev_lowestmode', '/l4_quality_flag', '/agbd', '/agbd_se', '/agbd_t', '/agbd_t_se', '/sensitivity',
+             '/rx_cumulative', '/digital_elevation_model_srtm', '/elevation_bias_flag', '/surface_flag',  '/num_detectedmodes',  '/selected_algorithm',
+             '/solar_elevation'] # TODO: select relevant L4A product variables
 
 # Default BEAM Subset
 beam_subset = ['BEAM0000', 'BEAM0001', 'BEAM0010', 'BEAM0011', 'BEAM0101', 'BEAM0110', 'BEAM1000', 'BEAM1011']
