@@ -1,6 +1,8 @@
 # GEDI-Pipeline
 
-This repository provides a unified workflow of acquiring data from the Global Ecosystem Dynamics Investigation (GEDI) mission at a footprint level.
+<img src="https://github.com/leonelluiscorado/GEDI-Pipeline/blob/main/pipeline/docs/img/GEDIPipeline-logo.png" alt="GEDI Pipeline-logo"/>
+
+**This repository provides a unified workflow of acquiring data from the Global Ecosystem Dynamics Investigation (GEDI) mission at a footprint level.**
 
 <img src="https://github.com/leonelluiscorado/GEDI-Pipeline/blob/main/pipeline/docs/img/gedi-pipeline2.png" alt="GEDI Pipeline"/>
 
