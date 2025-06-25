@@ -13,12 +13,13 @@ class GEDIPipeline:
         out
     """
 
-    def __init__(self, out_directory, product, version, date_start, date_end, recurring_months, roi, sds, beams, persist_login=False):
+    def __init__(self, out_directory, product, version, date_start, date_end, recurring_months, roi, sds, beams, persist_login=False, keep_original_file=False):
 
         self.product = product
         self.version = version
         self.date_start, self.date_end = date_start, date_end
         self.recurring_months = recurring_months
+        self.keep_original_file = keep_original_file
 
         if isinstance(roi, list):
             self.roi = [float(c) for c in roi]
@@ -85,6 +86,7 @@ class GEDIPipeline:
             self.subsetter.subset(os.path.join(self.out_directory, g[0].split("/")[-1]))
 
             # Delete original file and keep subset to ROI granule to save space
-            os.remove(os.path.join(self.out_directory, g[0].split("/")[-1]))
+            if not self.keep_original_file:
+                os.remove(os.path.join(self.out_directory, g[0].split("/")[-1]))
 
         return all_granules

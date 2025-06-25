@@ -34,6 +34,9 @@ parser.add_argument('--sds', required=False, help='Specific science datasets (SD
 parser.add_argument('--login_keep', required=False, help='Include this option to keep EarthData login saved to this machine. It defaults saving to \
                     the .netrc file', action='store_true')
 
+parser.add_argument('--keep_original_file', required=False, help='Include this option to GEDIPipeline and instruct it to not delete the downloaded HDF5 files from LPDAAC.', action='store_true')
+
+
 args = parser.parse_args()
 
 # ------------------------------------------------------------------------------------#
@@ -50,7 +53,8 @@ pipeline = GEDIPipeline(
     roi = args.roi,
     beams = args.beams,
     sds = args.sds,
-    persist_login = args.login_keep
+    persist_login = args.login_keep,
+    keep_original_file=args.keep_original_file
 )
 
 print("[Pipeline] Pipeline set, starting ...")
