@@ -96,4 +96,4 @@ Silva,C.A; Hamamura,C.; Valbuena, R.; Hancock,S.; Cardil,A.; Broadbent, E. N.; A
 
 ## Citing this Project
 
-Corado, L., Godinho, S. GEDI-Pipeline. 2025. Version 0.1.0, available at: https://github.com/leonelluiscorado/GEDI-Pipeline
+Corado, L., Godinho, S., 2024. GEDI-Pipeline. Version 0.1.0, accessed on 12-11-2024, available at: https://github.com/leonelluiscorado/GEDI-Pipeline
